@@ -22,7 +22,7 @@ let options = new chromedriver.Options();
 // change default download directory
 options.addArgument(`download.default_directory=${path}`);
 
-const app = {};
+let app = {};
 
 app.fname = "error.xlsx";
 
