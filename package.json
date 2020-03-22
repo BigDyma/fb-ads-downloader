@@ -15,15 +15,11 @@
   "dependencies": {
     "assert": "^2.0.0",
     "chokidar": "^3.3.1",
-    "chokidar-cli": "^2.1.0",
     "install": "^0.13.0",
-    "phantomjs-prebuilt": "^2.1.16",
     "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "devDependencies": {
     "chromedriver": "^80.0.1",
-    "fs": "0.0.1-security",
-    "fs-extra": "^8.1.0",
-    "phantom": "^6.3.0"
+    "fs-extra": "^8.1.0"
   }
 }
