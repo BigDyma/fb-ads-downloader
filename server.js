@@ -85,7 +85,7 @@ app.makeUrl = async function() {
                 const allmetrics = fbObject.metrics.join() + fbObject.time_url;
                 base_url = `${act_url}${act[k]}${business_url}${bmid}&event_source=CLICK_EXPORT_TO_ADS_REPORTING&breakdowns=${map_level}&locked_dimensions=0&metrics=${allmetrics}`;
                 this.fname = `${k}-${level}.xlsx`
-                await downloadReport(base_url);
+                await this.downloadReport(base_url);
             }
         }
     }
