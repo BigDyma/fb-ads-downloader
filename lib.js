@@ -1,13 +1,25 @@
+let webdriver = require('selenium-webdriver');
+
+Condition = webdriver.Condition;
+
+
 const  fbObject = {};
 
-
 fbObject.business_ids = {
-    // 'NAME OF BUSINESS MANAGER HERE': {
-    //   'bm': BUSINESS MANAGER ID HERE,
-    //   'act': {
-    //     'ADD ACCOUNT NAME HERE': ADD ACCOUNT ID HERE
-    //   }
-};
+    'uncagex':{
+      'bm':626011761607183,
+      'act':{
+        'uncagex':256739812448184
+      }
+    },
+    'aa':
+    {
+    'bm': 141765983657101,
+    'act': {
+      'aa': 394235154522262
+    }
+    }
+ };
 
 fbObject.metrics = [
     'objective',
@@ -33,12 +45,12 @@ fbObject.metrics = [
 
 fbObject.map_levels = ["ad_name", "adset_name", "campaign_name,age", "campaign_name,gender", "campaign_name,impression_device", "campaign_name", "campaign_name,days_1", "campaign_name,country"];
 
-fbObject.levles = ["aduri", "adseturi", "varsta", "sex", "dispozitiv", "campanii", "campanii-zile", "campanii-tara"];
+fbObject.levels = ["aduri", "adseturi", "varsta", "sex", "dispozitiv", "campanii", "campanii-zile", "campanii-tara"];
 
 fbObject.time_url = "&time_range=2020-02-01_2020-03-13";
-fbObject.exportButtonPath = '/html/body/div[1]/div/div[2]/div[1]/div/div/div[1]/div[2]/div[1]/div/div[2]/div/div[3]/span/button';
-fbObject.downloadButtonPath = '/html/body/div[7]/div[2]/div/div/div/div/div/div/div[3]/span[2]/div/div[2]/button';
-fbObject.checkelement = function elementIsNotPresent(locator) {
+fbObject.exportButtonPath = 'export_button';
+fbObject.downloadButtonPath = '/html/body/div[5]/div[2]/div/div/div/div/div/div/div[3]/span[2]/div/div[2]/button';
+fbObject.elementIsNotPresent = function(locator) {
     return new Condition('for no element to be located ' + locator, function(driver) {
         return driver.findElements(locator).then(function(elements) {
             return elements.length === 0;
