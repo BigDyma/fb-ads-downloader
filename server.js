@@ -3,7 +3,6 @@ const chromedriver = require("selenium-webdriver/chrome");
 const chokidar = require('chokidar');
 const fs = require('fs');
 const fbObject = require('./lib');
-const { captureRejectionSymbol } = require('events');
 
 const static_path = `C:\\Users\\Strelet\\Downloads`;
 const act_url = "https://business.facebook.com/adsmanager/reporting/view?act=";
@@ -27,12 +26,10 @@ options.addArguments(`download.default_directory=${static_path}`);
 
 // options.addArguments('--headless');
 
-let app = {check: true};
-
-//todo: delete this later
-
-
-app.fname = "error.xlsx";
+let app = {
+    check: true,
+    fname: 'error.xlsx'
+};
 
 app.watcher = chokidar.watch(`${static_path}/`, {
     ignored: ["/^\./", `${static_path}/excels/*`, `${static_path}/Telegram Desktop/*`],
@@ -40,10 +37,9 @@ app.watcher = chokidar.watch(`${static_path}/`, {
 });
 app.watcher
     .on('add', (path) => {
-
-        // if appear an excel file move it do excel folder
+        // if appear an excel file move it to excels folder
         if (path.split(".").pop() === "xlsx") {
-            fs.rename(path, `${static_path}\\excels\\${app.fname}`, (err) => {
+            fs.rename(path, `${static_path}\\excels\\${this.fname}`, (err) => {
                 if (err) console.log('ERROR: ' + err);
             });
         }
@@ -51,50 +47,44 @@ app.watcher
     .on('error', (error) => {
         console.error('Error happened', error);
     })
-    const screen = {
-        width: 640,
-        height: 480
-      };
-
       
 let driver = new webdriver.Builder().forBrowser("chrome").setChromeOptions(options).build(); // Build Chrome Webdriver
 
 app.downloadReport = async function(url) {
     try { 
+
         // await to load the page
         await driver.get(url);
-        
-        
-        // await driver.findElement(By.id('email')).sendKeys("dinasty101@hotmail.com");
-        // await driver.findElement(By.id('pass')).sendKeys("1d3pIfss5%mdaivsUt4!", Key.RETURN);
 
-        driver.takeScreenshot().then(
-            function(image, err) {
-                require('fs').writeFile('out.png', image, 'base64', function(err) {
-                    console.log(err);
-                });
-            }
-        );
+        // driver.takeScreenshot().then(
+        //     function(image, err) {
+        //         require('fs').writeFile('out.png', image, 'base64', function(err) {
+        //             console.log(err);
+        //         });
+        //     }
+        // );
         
         //wait for exportButton to be loaded
         const exportButton = driver.wait(
             until.elementLocated(By.id(fbObject.exportButtonPath))
         );
-        this.check = await driver.findElements(By.xpath("/html/body/div[1]/div/div/div/div/div/div[1]/div[2]/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div[2]/div/div/div/div[2]/div/div/div[1]")).then(function() {
-            return false;//nu sunt campanii
-        }, function(err) {
-            if (err instanceof webdriver.error.NoSuchElementError) {
-                return true;//campanii sunt
-            } else {
-                webdriver.promise.rejected(err);//some other error...
-            }
-        });
+        this.check = false;
+
+        // if there is no ads in add acount then just skip this account.
+        try {
+           await driver.wait(
+                until.elementLocated(By.xpath("/html/body/div[1]/div/div/div/div/div/div[1]/div[2]/div[2]/div/div[3]/div[1]/div[2]/div/div/div/div/div[2]/div/div/div/div[2]/div/div/div[1]")), 2000
+            )
+        } catch (error ) {
+            this.check = true;
+        }
+        
+        // skip this account 
         if (this.check === false )
         {
-            console.log('nu-s'); 
+            console.log(`campanii in ${this.fname} nu sunt`); 
             return ;
         }
-        console.log('campanii sunt')
             
 
         //Click export Button
@@ -112,7 +102,7 @@ app.downloadReport = async function(url) {
         await driver.wait(until.elementIsNotPresent(By.css("div[name='progress']"), 15000));
 
     } finally {
-        console.log("downloaded", this.fname)
+        console.log(this.fname);
     }
 }
 
@@ -144,7 +134,7 @@ app.makeUrl = async function() {
                     this.fname = `${k}-${level}.xlsx`
                 
                 // download report
-                console.log(base_url);
+                 console.log(base_url);
                 await this.downloadReport(base_url);
             }
             
